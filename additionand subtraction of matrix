@@ -37,37 +37,106 @@ void subtractMatrix(int matrix1[][100], int matrix2[][100], int result[][100], i
     }
 }
 
+void multiplyMatrix(int matrix1[][100], int rows1, int columns1, int matrix2[][100], int columns2, int result[][100]) {
+    for (int i = 0; i < rows1; i++) {
+        for (int j = 0; j < columns2; j++) {
+            result[i][j] = 0;
+
+            for (int k = 0; k < columns1; k++) {
+                result[i][j] += matrix1[i][k] * matrix2[k][j];
+            }
+        }
+    }
+}
+
+void addSubtractRows(int matrix[][100], int rows, int columns) {
+    for (int i = 0; i < rows; i++) {
+        int rowSum = 0;
+        int rowDiff = 0;
+
+        for (int j = 0; j < columns; j++) {
+            rowSum += matrix[i][j];
+            rowDiff -= matrix[i][j];
+        }
+
+        printf("Row %d: Sum = %d, Difference = %d\n", i + 1, rowSum, rowDiff);
+    }
+}
+
+void addSubtractColumns(int matrix[][100], int rows, int columns) {
+    for (int i = 0; i < columns; i++) {
+        int colSum = 0;
+        int colDiff = 0;
+
+        for (int j = 0; j < rows; j++) {
+            colSum += matrix[j][i];
+            colDiff -= matrix[j][i];
+        }
+
+        printf("Column %d: Sum = %d, Difference = %d\n", i + 1, colSum, colDiff);
+    }
+}
+
 int main() {
     int matrix1[100][100], matrix2[100][100], result[100][100];
-    int rows, columns;
+    int rows1, columns1, rows2, columns2;
 
-    printf("Enter the number of rows and columns for the matrices: ");
-    scanf("%d %d", &rows, &columns);
+    printf("Enter the number of rows and columns for Matrix 1: ");
+    scanf("%d %d", &rows1, &columns1);
+
+    printf("Enter the number of rows and columns for Matrix 2: ");
+    scanf("%d %d", &rows2, &columns2);
+
+    if (columns1 != rows2) {
+        printf("Matrix multiplication not possible!\n");
+        return 0;
+    }
 
     printf("\nEnter Matrix 1:\n");
-    readMatrix(matrix1, rows, columns);
+    readMatrix(matrix1, rows1, columns1);
 
     printf("\nEnter Matrix 2:\n");
-    readMatrix(matrix2, rows, columns);
+    readMatrix(matrix2, rows2, columns2);
 
     printf("\nMatrix 1:\n");
-    printMatrix(matrix1, rows, columns);
+    printMatrix(matrix1, rows1, columns1);
 
     printf("\nMatrix 2:\n");
-    printMatrix(matrix2, rows, columns);
+    printMatrix(matrix2, rows2, columns2);
 
     // Adding the matrices
-    addMatrix(matrix1, matrix2, result, rows, columns);
+    addMatrix(matrix1, matrix2, result, rows1, columns1);
     printf("\nAddition Result:\n");
-    printMatrix(result, rows, columns);
+    printMatrix(result, rows1, columns1);
 
     // Subtracting the matrices
-    subtractMatrix(matrix1, matrix2, result, rows, columns);
+    subtractMatrix(matrix1, matrix2, result, rows1, columns1);
     printf("\nSubtraction Result:\n");
-    printMatrix(result, rows, columns);
+    printMatrix(result, rows1, columns1);
 
-    printf("\nNumber of Rows: %d\n", rows);
-    printf("Number of Columns: %d\n", columns);
+    // Multiplying the matrices
+    multiplyMatrix(matrix1, rows1, columns1, matrix2, columns2, result);
+    printf("\nMultiplication Result:\n");
+    printMatrix(result, rows1, columns2);
+
+    printf("\nNumber of Rows in Matrix 1: %d\n", rows1);
+    printf("Number of Columns in Matrix 1: %d\n", columns1);
+
+    printf("\nNumber of Rows in Matrix 2: %d\n", rows2);
+    printf("Number of Columns in Matrix 2: %d\n", columns2);
+
+    printf("\nAddition and Subtraction for each row of Matrix 1:\n");
+    addSubtractRows(matrix1, rows1, columns1);
+
+    printf("\nAddition and Subtraction for each column of Matrix 1:\n");
+    addSubtractColumns(matrix1, rows1, columns1);
+
+    printf("\nAddition and Subtraction for each row of Matrix 2:\n");
+    addSubtractRows(matrix2, rows2, columns2);
+
+    printf("\nAddition and Subtraction for each column of Matrix 2:\n");
+    addSubtractColumns(matrix2, rows2, columns2);
 
     return 0;
 }
+
