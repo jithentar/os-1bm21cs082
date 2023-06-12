@@ -1,0 +1,73 @@
+#include <stdio.h>
+
+void readMatrix(int matrix[][100], int rows, int columns) {
+    printf("Enter the elements of the matrix:\n");
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+}
+
+void printMatrix(int matrix[][100], int rows, int columns) {
+    printf("Matrix:\n");
+
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void addMatrix(int matrix1[][100], int matrix2[][100], int result[][100], int rows, int columns) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            result[i][j] = matrix1[i][j] + matrix2[i][j];
+        }
+    }
+}
+
+void subtractMatrix(int matrix1[][100], int matrix2[][100], int result[][100], int rows, int columns) {
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < columns; j++) {
+            result[i][j] = matrix1[i][j] - matrix2[i][j];
+        }
+    }
+}
+
+int main() {
+    int matrix1[100][100], matrix2[100][100], result[100][100];
+    int rows, columns;
+
+    printf("Enter the number of rows and columns for the matrices: ");
+    scanf("%d %d", &rows, &columns);
+
+    printf("\nEnter Matrix 1:\n");
+    readMatrix(matrix1, rows, columns);
+
+    printf("\nEnter Matrix 2:\n");
+    readMatrix(matrix2, rows, columns);
+
+    printf("\nMatrix 1:\n");
+    printMatrix(matrix1, rows, columns);
+
+    printf("\nMatrix 2:\n");
+    printMatrix(matrix2, rows, columns);
+
+    // Adding the matrices
+    addMatrix(matrix1, matrix2, result, rows, columns);
+    printf("\nAddition Result:\n");
+    printMatrix(result, rows, columns);
+
+    // Subtracting the matrices
+    subtractMatrix(matrix1, matrix2, result, rows, columns);
+    printf("\nSubtraction Result:\n");
+    printMatrix(result, rows, columns);
+
+    printf("\nNumber of Rows: %d\n", rows);
+    printf("Number of Columns: %d\n", columns);
+
+    return 0;
+}
