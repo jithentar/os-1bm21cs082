@@ -1,0 +1,104 @@
+#include <stdio.h>
+
+#define MAX_PROCESS 10
+
+struct Process {
+    int pid;
+    int burstTime;
+    int priority;
+    int remainingTime;
+};
+
+void priorityScheduling(struct Process processes[], int n);
+void roundRobinScheduling(struct Process processes[], int n, int quantum);
+
+int main() {
+    int n, i;
+    struct Process processes[MAX_PROCESS];
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    printf("Enter burst time and priority for each process:\n");
+    for (i = 0; i < n; i++) {
+        printf("Process %d:\n", i + 1);
+        processes[i].pid = i + 1;
+        printf("Burst time: ");
+        scanf("%d", &processes[i].burstTime);
+        printf("Priority: ");
+        scanf("%d", &processes[i].priority);
+        processes[i].remainingTime = processes[i].burstTime;
+    }
+
+    printf("\nPriority Scheduling:\n");
+    priorityScheduling(processes, n);
+
+    printf("\nRound Robin Scheduling:\n");
+    roundRobinScheduling(processes, n, 2); // Experiment with different quantum sizes
+
+    return 0;
+}
+
+void priorityScheduling(struct Process processes[], int n) {
+    int i, j;
+    struct Process temp;
+    int waitingTime = 0, turnaroundTime = 0;
+
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (processes[j].priority > processes[j + 1].priority) {
+                temp = processes[j];
+                processes[j] = processes[j + 1];
+                processes[j + 1] = temp;
+            }
+        }
+    }
+
+    printf("Process\tBurst Time\tPriority\tWaiting Time\tTurnaround Time\n");
+
+    for (i = 0; i < n; i++) {
+        turnaroundTime += processes[i].burstTime;
+        printf("%d\t%d\t\t%d\t\t%d\t\t%d\n", processes[i].pid, processes[i].burstTime,
+               processes[i].priority, waitingTime, turnaroundTime);
+        waitingTime += processes[i].burstTime;
+    }
+}
+
+void roundRobinScheduling(struct Process processes[], int n, int quantum) {
+    int i, time = 0;
+    int waitingTime = 0, turnaroundTime = 0;
+
+    do {
+        for (i = 0; i < n; i++) {
+            if (processes[i].remainingTime > 0) {
+                if (processes[i].remainingTime > quantum) {
+                    time += quantum;
+                    processes[i].remainingTime -= quantum;
+                } else {
+                    time += processes[i].remainingTime;
+                    waitingTime += time - processes[i].burstTime;
+                    turnaroundTime += time;
+                    processes[i].remainingTime = 0;
+                }
+            }
+        }
+    } while (checkAllProcessesComplete(processes, n));
+
+    printf("Process\tBurst Time\tWaiting Time\tTurnaround Time\n");
+
+    for (i = 0; i < n; i++) {
+        printf("%d\t%d\t\t%d\t\t%d\n", processes[i].pid, processes[i].burstTime,
+               waitingTime, turnaroundTime);
+    }
+}
+
+int checkAllProcessesComplete(struct Process processes[], int n) {
+    int i;
+    for (i = 0; i < n; i++) {
+        if (processes[i].remainingTime > 0) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
