@@ -1,0 +1,78 @@
+        processes[i].remainingTi…Read more
+6:23 PM
+#include <stdio.h>
+
+#define MAX_PROCESS 10
+
+enum ProcessType {
+    USER,
+    SYSTEM
+};
+
+struct Process {
+    int pid;
+    int arrivalTime;
+    int burstTime;
+    enum ProcessType type;
+};
+
+void multiLevelQueueScheduling(struct Process processes[], int n);
+
+int main() {
+    int n, i;
+    struct Process processes[MAX_PROCESS];
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    printf("Enter process details:\n");
+    for (i = 0; i < n; i++) {
+        printf("Process %d:\n", i + 1);
+        processes[i].pid = i + 1;
+        printf("Arrival time: ");
+        scanf("%d", &processes[i].arrivalTime);
+        printf("Burst time: ");
+        scanf("%d", &processes[i].burstTime);
+        printf("Type (0 for user, 1 for system): ");
+        int type;
+        scanf("%d", &type);
+        processes[i].type = (type == 1) ? SYSTEM : USER;
+    }
+
+    multiLevelQueueScheduling(processes, n);
+
+    return 0;
+}
+
+void multiLevelQueueScheduling(struct Process processes[], int n) {
+    struct Process systemQueue[MAX_PROCESS];
+    struct Process userQueue[MAX_PROCESS];
+    int systemCount = 0, userCount = 0;
+    int currentTime = 0;
+    int i, j;
+
+    for (i = 0; i < n; i++) {
+        if (processes[i].type == SYSTEM) {
+            systemQueue[systemCount] = processes[i];
+            systemCount++;
+        } else {
+            userQueue[userCount] = processes[i];
+            userCount++;
+        }
+    }
+
+    printf("Multi-Level Queue Scheduling:\n");
+    printf("Process\tArrival Time\tBurst Time\n");
+
+    // FCFS scheduling for system processes
+    for (i = 0; i < systemCount; i++) {
+        printf("%d\t%d\t\t%d\n", systemQueue[i].pid, systemQueue[i].arrivalTime, systemQueue[i].burstTime);
+        currentTime += systemQueue[i].burstTime;
+    }
+
+    // FCFS scheduling for user processes
+    for (i = 0; i < userCount; i++) {
+        printf("%d\t%d\t\t%d\n", userQueue[i].pid, userQueue[i].arrivalTime, userQueue[i].burstTime);
+        currentTime += userQueue[i].burstTime;
+    }
+}
