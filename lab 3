@@ -1,5 +1,4 @@
-        processes[i].remainingTi…Read more
-6:23 PM
+
 #include <stdio.h>
 
 #define MAX_PROCESS 10
